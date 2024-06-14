@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Path, Query
 from .service import OwnerService
 from .schemas import OwnerRequest, OwnerResponse
 from sqlalchemy.orm import Session
-from src.database import get_rdb
+from database import get_rdb
 
 router = APIRouter()
 

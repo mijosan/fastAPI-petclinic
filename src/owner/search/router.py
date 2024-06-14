@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Query
 from .schemas import OwnerRequest, OwnerResponse
 from .service import OwnerSearchService
 from elasticsearch import Elasticsearch
-from src.database import get_es
+from database import get_es
 
 router = APIRouter()
 
