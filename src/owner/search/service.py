@@ -4,6 +4,9 @@ from elasticsearch_dsl import Search
 from .exceptions import DocumentNotFoundException
 from .schemas import OwnerRequest, OwnerResponse, Owner
 import json
+import logging
+
+logger = logging.getLogger('app')
 
 class OwnerSearchService:
     def __init__(self, es: Elasticsearch):
@@ -16,7 +19,7 @@ class OwnerSearchService:
             search = Search(using=self.es, index="owners").query("match_all")
         
         # 디버깅을 위해 to_dict() 출력
-        print("Search Query:", json.dumps(search.to_dict(), indent=2))
+        logger.info("Search Query:", json.dumps(search.to_dict(), indent=2))
 
         # 직접 HTTP 요청 보내기
         response = self.es.transport.perform_request(
