@@ -6,7 +6,7 @@ from database import get_es
 
 router = APIRouter()
 
-@router.get("/", response_model=OwnerResponse)
+@router.get("", response_model=OwnerResponse)
 async def search_owners(
     name: str = Query(None, title="Name to search for"),
     es: Elasticsearch = Depends(get_es)

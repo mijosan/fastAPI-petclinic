@@ -6,7 +6,7 @@ from database import get_rdb
 
 router = APIRouter()
 
-@router.get("/", response_model=OwnerResponse)
+@router.get("", response_model=OwnerResponse)
 async def get_owners(
     name: str = Query(None, title="Name to search for"),
     skip: int = Query(0, ge=0, title="Number of records to skip"),

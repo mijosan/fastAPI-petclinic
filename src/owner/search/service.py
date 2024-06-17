@@ -2,7 +2,7 @@ from elasticsearch import Elasticsearch
 from elasticsearch_dsl import Search
 
 from .exceptions import DocumentNotFoundException
-from .schemas import OwnerRequest, OwnerResponse, Owner
+from .schemas import OwnerRequest, OwnerResponse, OwnerSchema
 import json
 import logging
 
@@ -36,7 +36,7 @@ class OwnerSearchService:
 
         results = []
         for hit in response_data['hits']['hits']:
-            results.append(Owner(id=hit['_source']['id'], name=hit['_source']['name']))
+            results.append(OwnerSchema(id=hit['_source']['id'], name=hit['_source']['name']))
 
         return OwnerResponse(
             total=len(results),
