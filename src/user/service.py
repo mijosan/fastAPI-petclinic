@@ -1,20 +1,18 @@
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.future import select
 from passlib.context import CryptContext
 
-from user.exceptions import UserEmailAlreadyExistsException, UserIdAlreadyExistsException
+from user.exceptions import InvalidCredentialsException, UserEmailAlreadyExistsException, UserIdAlreadyExistsException
+from user.utils import create_access_token, get_password_hash, verify_password
 from .models import UserModel
 from .schemas import UserSchema, UserRequest, UserResponse
 
 class UserService:
     def __init__(self, db: Session):
         self.db = db
-        self.pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
         
-    def get_password_hash(self, password):
-        return self.pwd_context.hash(password)
-
     def create_user(self, user_request: UserRequest) -> UserResponse:
         try:
             with self.db.begin():
@@ -31,9 +29,9 @@ class UserService:
                     raise UserEmailAlreadyExistsException(user_request.email)
                 
                 user_model = UserModel(
-                    id=user_request.id,
-                    email=user_request.email,
-                    password=self.get_password_hash(user_request.password)
+                    id = user_request.id,
+                    email = user_request.email,
+                    password = get_password_hash(user_request.password)
                 )
                 
                 self.db.add(user_model)
@@ -48,3 +46,13 @@ class UserService:
             self.db.rollback()
             
             raise Exception
+        
+    def login_user(self, user_request: UserRequest):
+        user = self.db.query(UserModel).filter(UserModel.id == user_request.id).first()
+        
+        if not user or not verify_password(user_request.password, user.password):
+            raise InvalidCredentialsException()
+
+        access_token = create_access_token(data={"sub": user.id})
+        
+        return access_token

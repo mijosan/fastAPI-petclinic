@@ -7,7 +7,7 @@ class Pagination(BaseModel):
     
 class UserSchema(BaseModel):
     id: str
-    email: EmailStr
+    email: Optional[EmailStr] = None
     
     class Config:
         from_attributes = True
@@ -15,7 +15,7 @@ class UserSchema(BaseModel):
 class UserRequest(Pagination):
     id: str
     password: str
-    email: EmailStr
+    email: Optional[EmailStr] = None
 
 class UserResponse(BaseModel):
     message: str

@@ -12,8 +12,8 @@ import logging
 import logging.config
 import os
 
-from user.exception_handlers import user_email_already_exists_exception_handler, user_id_already_exists_exception_handler
-from user.exceptions import UserEmailAlreadyExistsException, UserIdAlreadyExistsException
+from user.exception_handlers import invalid_credentials_exception_handler, user_email_already_exists_exception_handler, user_id_already_exists_exception_handler
+from user.exceptions import InvalidCredentialsException, UserEmailAlreadyExistsException, UserIdAlreadyExistsException
 
 def create_app() -> FastAPI:    
     app = FastAPI()
@@ -28,6 +28,7 @@ def create_app() -> FastAPI:
     app.add_exception_handler(DocumentNotFoundException, document_not_found_exception_handler)
     app.add_exception_handler(UserIdAlreadyExistsException, user_id_already_exists_exception_handler)
     app.add_exception_handler(UserEmailAlreadyExistsException, user_email_already_exists_exception_handler)
+    app.add_exception_handler(InvalidCredentialsException, invalid_credentials_exception_handler)
     app.add_exception_handler(Exception, global_exception_handler)
         
     # 미들웨어 등록
