@@ -1,9 +1,11 @@
 import os
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+
 from dotenv import load_dotenv
 from elasticsearch import Elasticsearch
+from sqlalchemy import (Column, ForeignKey, Integer, MetaData, String, Table,
+                        create_engine)
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
 load_dotenv()  # .env 파일에서 환경 변수를 불러옵니다
 

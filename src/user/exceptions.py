@@ -7,5 +7,9 @@ class UserEmailAlreadyExistsException(Exception):
         self.email = email
         
 class InvalidCredentialsException(Exception):
-    def __init__(self):
-        pass
+    def __init__(self, detail: str = "Invalid credentials"):
+        self.detail = detail
+
+class OperationNotPermittedException(Exception):
+    def __init__(self, detail: str = "Operation not permitted"):
+        self.detail = detail

@@ -1,11 +1,10 @@
 from fastapi import HTTPException
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.future import select
 from passlib.context import CryptContext
-
 from user.exceptions import InvalidCredentialsException, UserEmailAlreadyExistsException, UserIdAlreadyExistsException
-from user.utils import create_access_token, get_password_hash, verify_password
+from auth.utils import create_access_token, get_password_hash, verify_password
 from .models import UserModel
 from .schemas import UserSchema, UserRequest, UserResponse
 
@@ -48,11 +47,11 @@ class UserService:
             raise Exception
         
     def login_user(self, user_request: UserRequest):
-        user = self.db.query(UserModel).filter(UserModel.id == user_request.id).first()
+        user = self.db.query(UserModel).options(joinedload(UserModel.roles)).filter(UserModel.id == user_request.id).first()
         
         if not user or not verify_password(user_request.password, user.password):
             raise InvalidCredentialsException()
 
-        access_token = create_access_token(data={"sub": user.id})
+        access_token = create_access_token(data={"id": user.id, "roles": user.roles})
         
         return access_token
