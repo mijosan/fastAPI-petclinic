@@ -52,6 +52,13 @@ class UserService:
         if not user or not verify_password(user_request.password, user.password):
             raise InvalidCredentialsException()
 
-        access_token = create_access_token(data={"id": user.id, "roles": user.roles})
+        user_schema = UserSchema.model_validate(user)
+
+        # roles를 dictionary로 변환
+        roles_as_dict = [role.model_dump() for role in user_schema.roles]
+        user_data = user_schema.model_dump()
+        user_data['roles'] = roles_as_dict
+
+        access_token = create_access_token(data={"id": user_data['id'], "roles": user_data['roles']})
         
         return access_token

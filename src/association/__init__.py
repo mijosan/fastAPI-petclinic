@@ -1,0 +1,1 @@
+from .associations import user_role_table

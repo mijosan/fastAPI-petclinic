@@ -1,4 +1,4 @@
-from sqlalchemy import String, Table, Column, Integer, ForeignKey
+from sqlalchemy import Column, ForeignKey, String, Integer, Table
 from database import Base
 
 user_role_table = Table('user_role', Base.metadata,

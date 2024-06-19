@@ -12,7 +12,7 @@ class UserSchema(BaseModel):
     roles: List[RoleSchema] = []
 
     class Config:
-        orm_mode = True
+        from_attributes=True
 
 class UserRequest(Pagination):
     id: str
