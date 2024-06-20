@@ -34,7 +34,7 @@ def create_app() -> FastAPI:
         
     # 미들웨어 등록
     app.add_middleware(LoggingMiddleware)
-    
+
     return app
 
 def setup_logging():

@@ -1,4 +1,5 @@
 from fastapi import HTTPException
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.future import select
@@ -46,10 +47,10 @@ class UserService:
             
             raise Exception
         
-    def login_user(self, user_request: UserRequest):
-        user = self.db.query(UserModel).options(joinedload(UserModel.roles)).filter(UserModel.id == user_request.id).first()
+    def login_user(self, OAuth2_password_request_form: OAuth2PasswordRequestForm):
+        user = self.db.query(UserModel).options(joinedload(UserModel.roles)).filter(UserModel.id == OAuth2_password_request_form.username).first()
         
-        if not user or not verify_password(user_request.password, user.password):
+        if not user or not verify_password(OAuth2_password_request_form.password, user.password):
             raise InvalidCredentialsException()
 
         user_schema = UserSchema.model_validate(user)

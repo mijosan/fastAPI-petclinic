@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 class RoleSchema(BaseModel):
     id: int
-    name: str
+    role: str
     
     class Config:
         from_attributes = True

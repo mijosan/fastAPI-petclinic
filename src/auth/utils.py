@@ -10,7 +10,7 @@ SECRET_KEY = "secret_key"
 ALGORITHM = "HS256"
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/user/login")
 
 def get_password_hash(password):
     return pwd_context.hash(password)
@@ -38,15 +38,18 @@ def decode_token(token: str):
         raise InvalidCredentialsException()
 
 def extract_user_info(payload: dict):
-    user_id: str = payload.get("sub")
-    role: str = payload.get("role")
-    if user_id is None or role is None:
-        raise InvalidCredentialsException()
-    
-    return {"user_id": user_id, "role": role}
+    id: str = payload.get("id")
+    roles: str = payload.get("roles")
+
+    return {"id": id, "roles": roles}
 
 def role_checker(token_data: dict, allowed_roles: list):
-    if token_data["role"] not in allowed_roles:
+    permitted = False
+    for role in token_data.get('roles', []):
+        if role['role'] in allowed_roles:
+            permitted = True
+            break
+    if not permitted:
         raise OperationNotPermittedException
 
 def verify_token(allowed_roles: list):
