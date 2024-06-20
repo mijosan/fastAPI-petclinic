@@ -1,26 +1,4 @@
-```
-fastAPI-petclinic
-├─ .gitignore
-├─ .vscode
-│  └─ launch.json
-├─ README.md
-├─ requirements
-│  └─ base.txt
-└─ src
-   ├─ app_init.py
-   ├─ database.py
-   ├─ logging.ini
-   ├─ main.py
-   ├─ middleware
-   │  └─ logging_middleware.py
-   └─ user
-      ├─ exceptions.py
-      ├─ exception_handlers.py
-      ├─ models.py
-      ├─ router.py
-      ├─ schemas.py
-      └─ service.py
-```
+# fastAPI PetClinic Sample Application
 
 ```
 fastAPI-petclinic
@@ -32,6 +10,9 @@ fastAPI-petclinic
 │  └─ base.txt
 └─ src
    ├─ app_init.py
+   ├─ association
+   │  ├─ associations.py
+   │  └─ __init__.py
    ├─ auth
    │  └─ utils.py
    ├─ database.py
@@ -55,13 +36,15 @@ fastAPI-petclinic
    │  └─ service.py
    ├─ role
    │  ├─ models.py
-   │  └─ schemas.py
+   │  ├─ schemas.py
+   │  └─ __init__.py
    └─ user
       ├─ exceptions.py
       ├─ exception_handlers.py
       ├─ models.py
       ├─ router.py
       ├─ schemas.py
-      └─ service.py
+      ├─ service.py
+      └─ __init__.py
 
 ```
