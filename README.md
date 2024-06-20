@@ -46,5 +46,4 @@ fastAPI-petclinic
       ├─ schemas.py
       ├─ service.py
       └─ __init__.py
-
 ```

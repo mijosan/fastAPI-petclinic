@@ -4,6 +4,7 @@ from sqlalchemy.orm import Session, joinedload
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.future import select
 from passlib.context import CryptContext
+from role.models import RoleModel
 from user.exceptions import InvalidCredentialsException, UserEmailAlreadyExistsException, UserIdAlreadyExistsException
 from auth.utils import create_access_token, get_password_hash, verify_password
 from .models import UserModel
@@ -28,16 +29,21 @@ class UserService:
                 if existing_email:
                     raise UserEmailAlreadyExistsException(user_request.email)
                 
+                default_role = self.db.execute(select(RoleModel).where(RoleModel.id == 2)).scalar_one_or_none()
+                
                 user_model = UserModel(
                     id = user_request.id,
                     email = user_request.email,
-                    password = get_password_hash(user_request.password)
+                    password = get_password_hash(user_request.password),
                 )
                 
                 self.db.add(user_model)
+    
+                # 기본 역할 추가
+                user_model.roles.append(default_role)
                 
                 user_list = []
-                user_list.append(UserSchema.model_validate(user_model))
+                user_list.append(UserSchema.from_orm(user_model))
                 
                 self.db.commit()
 
