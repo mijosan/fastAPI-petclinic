@@ -1,14 +1,20 @@
 from fastapi import HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy.orm import Session, joinedload
+from passlib.context import CryptContext
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.future import select
-from passlib.context import CryptContext
-from role.models import RoleModel
-from user.exceptions import InvalidCredentialsException, UserEmailAlreadyExistsException, UserIdAlreadyExistsException
+from sqlalchemy.orm import Session, joinedload
+
 from auth.utils import create_access_token, get_password_hash, verify_password
+from role.models import RoleModel
+from user.exceptions import (InvalidCredentialsException,
+                             UserEmailAlreadyExistsException,
+                             UserIdAlreadyExistsException,
+                             UserNotFoundException)
+
 from .models import UserModel
-from .schemas import UserSchema, UserRequest, UserResponse
+from .schemas import UserRequest, UserResponse, UserSchema
+
 
 class UserService:
     def __init__(self, db: Session):
@@ -69,3 +75,32 @@ class UserService:
         access_token = create_access_token(data={"id": user_data['id'], "roles": user_data['roles']})
         
         return access_token
+    
+    def get_users(self, user_request: UserRequest) -> UserResponse:
+        stmt = select(UserModel)
+        
+        # 조건부 필터링
+        if user_request.id:
+            stmt = stmt.where(UserModel.id.like(f"%{user_request.id}%"))
+        
+        # 페이지네이션 적용
+        stmt = stmt.offset(user_request.skip).limit(user_request.limit)
+        
+        users = self.db.execute(stmt).scalars().all()
+        
+        # SQLAlchemy 객체를 Pydantic 객체로 변환
+        user_list = [UserSchema.model_validate(user) for user in users]
+
+        return UserResponse(users = user_list)
+
+    def get_user(self, id: str) -> UserResponse:
+        stmt = select(UserModel).where(UserModel.id == id)
+        
+        user = self.db.execute(stmt).scalar_one_or_none()
+        
+        if user is None:
+            raise UserNotFoundException(id)
+
+        user_schema = [UserSchema.model_validate(user)]
+
+        return UserResponse(users = user_schema)

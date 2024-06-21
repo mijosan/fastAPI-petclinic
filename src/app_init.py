@@ -1,30 +1,29 @@
 from fastapi import FastAPI
 from middleware.logging_middleware import LoggingMiddleware
-from owner.exception_handlers import owner_not_found_exception_handler, global_exception_handler
-from owner.search.exception_handlers import document_not_found_exception_handler
-from owner.exceptions import OwnerNotFoundException
-from owner.search.exceptions import DocumentNotFoundException
-from owner import router as owner_router
-from owner.search import router as owner_search_router
+from user.exception_handlers import user_not_found_exception_handler
+from user.search.exception_handlers import document_not_found_exception_handler
+from user.exceptions import UserNotFoundException
+from user.search.exceptions import DocumentNotFoundException
+from user.search import router as user_search_router
 from user import router as user_router
+from exception_handlers import global_exception_handler
 
 import logging
 import logging.config
 import os
 
-from user.exception_handlers import invalid_credentials_exception_handler, operation_not_permitted_exception_handler, user_email_already_exists_exception_handler, user_id_already_exists_exception_handler
-from user.exceptions import InvalidCredentialsException, OperationNotPermittedException, UserEmailAlreadyExistsException, UserIdAlreadyExistsException
+from user.exception_handlers import invalid_credentials_exception_handler, operation_not_permitted_exception_handler, user_email_already_exists_exception_handler, user_id_already_exists_exception_handler, user_not_found_exception_handler
+from user.exceptions import InvalidCredentialsException, OperationNotPermittedException, UserEmailAlreadyExistsException, UserIdAlreadyExistsException, UserNotFoundException
 
 def create_app() -> FastAPI:    
     app = FastAPI()
     
     # 라우터 등록
-    app.include_router(owner_router.router, prefix="/owners", tags=["owners"])
     app.include_router(user_router.router, prefix="/user", tags=["user"])
-    app.include_router(owner_search_router.router, prefix="/search/owners", tags=["owner_search"])
+    app.include_router(user_search_router.router, prefix="/search/users", tags=["user_search"])
     
     # 예외 핸들러 등록
-    app.add_exception_handler(OwnerNotFoundException, owner_not_found_exception_handler)
+    app.add_exception_handler(UserNotFoundException, user_not_found_exception_handler)
     app.add_exception_handler(DocumentNotFoundException, document_not_found_exception_handler)
     app.add_exception_handler(UserIdAlreadyExistsException, user_id_already_exists_exception_handler)
     app.add_exception_handler(UserEmailAlreadyExistsException, user_email_already_exists_exception_handler)

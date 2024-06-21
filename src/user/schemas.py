@@ -15,10 +15,10 @@ class UserSchema(BaseModel):
         from_attributes=True
 
 class UserRequest(Pagination):
-    id: str
-    password: str
+    id: Optional[str] = None
+    password: Optional[str] = None
     email: Optional[EmailStr] = None
 
 class UserResponse(BaseModel):
-    message: str
+    message: Optional[str] = None
     users: List[UserSchema]

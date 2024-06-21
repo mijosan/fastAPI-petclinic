@@ -1,15 +1,15 @@
 from typing import List, Optional
 from pydantic import BaseModel
 
-class OwnerSchema(BaseModel):
+class UserSchema(BaseModel):
     id: int
     name: str
     
     class Config:
         from_attributes = True
 
-class OwnerRequest(BaseModel):
+class UserRequest(BaseModel):
     name: Optional[str] = None
 
-class OwnerResponse(BaseModel):
-    owners: List[OwnerSchema]
+class UserResponse(BaseModel):
+    users: List[UserSchema]

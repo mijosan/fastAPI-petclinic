@@ -13,3 +13,7 @@ class InvalidCredentialsException(Exception):
 class OperationNotPermittedException(Exception):
     def __init__(self, detail: str = "Operation not permitted"):
         self.detail = detail
+
+class UserNotFoundException(Exception):
+    def __init__(self, id: int):
+        self.id = id

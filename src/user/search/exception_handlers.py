@@ -1,11 +1,11 @@
-from fastapi import FastAPI, Request
+from fastapi import Request
 from fastapi.responses import JSONResponse
-from .exceptions import DocumentNotFoundException
 
-app = FastAPI()
+from schemas import StatusCodeEnum
+from .exceptions import DocumentNotFoundException
 
 async def document_not_found_exception_handler(request: Request, exc: DocumentNotFoundException):
     return JSONResponse(
-        status_code=404,
+        status_code = StatusCodeEnum.CLIENT_ERROR,
         content={"message": f"Document with name: {exc.name} not found"},
     )

@@ -1,28 +1,34 @@
 # src/user/exception_handlers.py
 from fastapi import Request
-from fastapi.responses import JSONResponse
-from .exceptions import InvalidCredentialsException, OperationNotPermittedException, UserEmailAlreadyExistsException, UserIdAlreadyExistsException
+from schemas import ResponseSchema, StatusCodeEnum
+from .exceptions import InvalidCredentialsException, OperationNotPermittedException, UserEmailAlreadyExistsException, UserIdAlreadyExistsException, UserNotFoundException
 
 async def user_id_already_exists_exception_handler(request: Request, exc: UserIdAlreadyExistsException):
-    return JSONResponse(
-        status_code=400,
-        content={"message": f"User with ID {exc.id} already exists"},
+    return ResponseSchema(
+        status_code = StatusCodeEnum.CLIENT_ERROR,
+        content = {"message": f"User with ID {exc.id} already exists"},
     )
     
 async def user_email_already_exists_exception_handler(request: Request, exc: UserEmailAlreadyExistsException):
-    return JSONResponse(
-        status_code=400,
-        content={"message": f"User with Email {exc.email} already exists"},
+    return ResponseSchema(
+        status_code = StatusCodeEnum.CLIENT_ERROR,
+        content = {"message": f"User with Email {exc.email} already exists"},
     )
     
 async def invalid_credentials_exception_handler(request: Request, exc: InvalidCredentialsException):
-    return JSONResponse(
-        status_code=401,
+    return ResponseSchema(
+        status_code = StatusCodeEnum.CLIENT_ERROR,
         content={"message": exc.detail},
     )
 
 async def operation_not_permitted_exception_handler(request: Request, exc: OperationNotPermittedException):
-    return JSONResponse(
-        status_code=403,
+    return ResponseSchema(
+        status_code = StatusCodeEnum.CLIENT_ERROR,
         content={"message": exc.detail},
+    )
+    
+async def user_not_found_exception_handler(request: Request, exc: UserNotFoundException):
+    return ResponseSchema(
+        status_code = StatusCodeEnum.CLIENT_ERROR,
+        content={"message": f"User with ID {exc.id} not found"},
     )
