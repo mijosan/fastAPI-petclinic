@@ -16,34 +16,30 @@ fastAPI-petclinic
    ├─ auth
    │  └─ utils.py
    ├─ database.py
+   ├─ exceptions.py
+   ├─ exception_handlers.py
    ├─ logging.ini
    ├─ main.py
    ├─ middleware
    │  └─ logging_middleware.py
-   ├─ owner
-   │  ├─ exceptions.py
-   │  ├─ exception_handlers.py
-   │  ├─ models.py
-   │  ├─ router.py
-   │  ├─ schemas.py
-   │  ├─ search
-   │  │  ├─ exceptions.py
-   │  │  ├─ exception_handlers.py
-   │  │  ├─ models.py
-   │  │  ├─ router.py
-   │  │  ├─ schemas.py
-   │  │  └─ service.py
-   │  └─ service.py
    ├─ role
    │  ├─ models.py
    │  ├─ schemas.py
    │  └─ __init__.py
+   ├─ schemas.py
    └─ user
       ├─ exceptions.py
       ├─ exception_handlers.py
       ├─ models.py
       ├─ router.py
       ├─ schemas.py
+      ├─ search
+      │  ├─ exceptions.py
+      │  ├─ exception_handlers.py
+      │  ├─ models.py
+      │  ├─ router.py
+      │  ├─ schemas.py
+      │  └─ service.py
       ├─ service.py
       └─ __init__.py
 ```
